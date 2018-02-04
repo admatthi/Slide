@@ -30,7 +30,7 @@ class TextsFlowLayout: UICollectionViewFlowLayout {
                 let itemWidth: CGFloat = (collectionView.frame.width/CGFloat(self.numberOfColumns))
                 //                let itemHeight: CGFloat =  (collectionView.frame.height/CGFloat(self.numberOfColumns))
                 
-                let itemHeight: CGFloat =  itemWidth
+                let itemHeight: CGFloat =  (itemWidth / 3)
                 
                 return CGSize(width: itemWidth, height: itemHeight)
             }

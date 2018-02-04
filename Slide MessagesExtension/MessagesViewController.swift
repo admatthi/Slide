@@ -24,56 +24,55 @@ var feeling = String()
 
 class MessagesViewController: MSMessagesAppViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
-    @IBOutlet weak var tapadore: UIButton!
-    @IBOutlet weak var taphappy: UIButton!
-    @IBOutlet weak var tapopeners: UIButton!
+    @IBOutlet weak var tapCompliments: UIButton!
+    @IBOutlet weak var tapAffirmative: UIButton!
+    @IBOutlet weak var tapnegatory: UIButton!
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var tapunhappy: UIButton!
-    @IBOutlet weak var tapmovies: UIButton!
+    @IBOutlet weak var tapFlirty: UIButton!
+    @IBOutlet weak var tapFavorites: UIButton!
     
-    @IBAction func tapMovies(_ sender: Any) {
+    @IBAction func tapFavorites(_ sender: Any) {
         
         tappedfavorites()
         feeling = "Favorites"
         
         queryforfeelings()
     }
-    var gridLayout: TextsFlowLayout = TextsFlowLayout(numberOfColumns: 3)
+    var gridLayout: TextsFlowLayout = TextsFlowLayout(numberOfColumns: 2)
 
     @IBOutlet weak var loadingBackground: UILabel!
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    @IBAction func tapHappy(_ sender: Any) {
+    @IBAction func tapAffirmative(_ sender: Any) {
         
-        tappedpositive()
-        feeling = "Positive"
-        
-        queryforfeelings()
-        
-    }
-    
-    @IBAction func tapAdore(_ sender: Any) {
-        
-        tappedminus()
-        feeling = "Minus"
-        
-        queryforfeelings()
-        
-        
-    }
-    @IBAction func tapOpeners(_ sender: Any) {
-        
-        tappedquestions()
-        feeling = "Questions"
+        tappedAffirmative()
+        feeling = "Affirmative"
         
         queryforfeelings()
         
     }
     
-    @IBAction func tapUnhappy(_ sender: Any) {
+    @IBAction func tapNegatory(_ sender: Any) {
+        
+        tappedCompliments()
+        feeling = "Negatory"
+        
+        queryforfeelings()
+    }
+    @IBAction func tapCompliments(_ sender: Any) {
+        
+        tappedCompliments()
+        feeling = "Compliments"
+        
+        queryforfeelings()
+        
+        
+    }
+    
+    @IBAction func tapFlirty(_ sender: Any) {
         
         tappedresponses()
-        feeling = "Answers"
+        feeling = "Flirty"
         
         queryforfeelings()
         
@@ -167,47 +166,47 @@ class MessagesViewController: MSMessagesAppViewController, UICollectionViewDeleg
     
     func tappedfavorites() {
         
-        tapmovies.setBackgroundImage(UIImage(named: "FavoritesTapped"), for: .normal)
-        tapadore.setBackgroundImage(UIImage(named:"MinusUntapped"), for: .normal)
-        taphappy.setBackgroundImage(UIImage(named:"PlusUntapped"), for: .normal)
-        tapopeners.setBackgroundImage(UIImage(named:"QuestionUntapped"), for: .normal)
-        tapunhappy.setBackgroundImage(UIImage(named:"ResponseUntapped"), for: .normal)
+        tapFavorites.setBackgroundImage(UIImage(named: "FavoritesTapped"), for: .normal)
+        tapCompliments.setBackgroundImage(UIImage(named:"ComplimentsUntapped"), for: .normal)
+        tapAffirmative.setBackgroundImage(UIImage(named:"PlusUntapped"), for: .normal)
+        tapnegatory.setBackgroundImage(UIImage(named:"MinusUntapped"), for: .normal)
+        tapFlirty.setBackgroundImage(UIImage(named:"ResponseUntapped"), for: .normal)
     }
     
-    func tappedquestions() {
+    func tappedFlirty() {
         
-        tapmovies.setBackgroundImage(UIImage(named: "FavoritesUntapped"), for: .normal)
-        tapadore.setBackgroundImage(UIImage(named:"MinusUntapped"), for: .normal)
-        taphappy.setBackgroundImage(UIImage(named:"PlusUntapped"), for: .normal)
-        tapopeners.setBackgroundImage(UIImage(named:"QuestionTapped"), for: .normal)
-        tapunhappy.setBackgroundImage(UIImage(named:"ResponseUntapped"), for: .normal)
+        tapFavorites.setBackgroundImage(UIImage(named: "FavoritesUntapped"), for: .normal)
+        tapCompliments.setBackgroundImage(UIImage(named:"ComplimentsUntapped"), for: .normal)
+        tapAffirmative.setBackgroundImage(UIImage(named:"PlusUntapped"), for: .normal)
+        tapnegatory.setBackgroundImage(UIImage(named:"MinusUntapped"), for: .normal)
+        tapFlirty.setBackgroundImage(UIImage(named:"ResponseUntapped"), for: .normal)
     }
     
-    func tappedpositive() {
+    func tappedAffirmative() {
         
-        tapmovies.setBackgroundImage(UIImage(named: "FavoritesUntapped"), for: .normal)
-        tapadore.setBackgroundImage(UIImage(named:"MinusUntapped"), for: .normal)
-        taphappy.setBackgroundImage(UIImage(named:"PlusTapped"), for: .normal)
-        tapopeners.setBackgroundImage(UIImage(named:"QuestionUntapped"), for: .normal)
-        tapunhappy.setBackgroundImage(UIImage(named:"ResponseUntapped"), for: .normal)
+        tapFavorites.setBackgroundImage(UIImage(named: "FavoritesUntapped"), for: .normal)
+        tapCompliments.setBackgroundImage(UIImage(named:"ComplimentsUntapped"), for: .normal)
+        tapAffirmative.setBackgroundImage(UIImage(named:"PlusTapped"), for: .normal)
+        tapnegatory.setBackgroundImage(UIImage(named:"QuestionUntapped"), for: .normal)
+        tapFlirty.setBackgroundImage(UIImage(named:"ResponseUntapped"), for: .normal)
     }
     
-    func tappedminus() {
+    func tappedCompliments() {
         
-        tapmovies.setBackgroundImage(UIImage(named: "FavoritesUntapped"), for: .normal)
-        tapadore.setBackgroundImage(UIImage(named:"MinusTapped"), for: .normal)
-        taphappy.setBackgroundImage(UIImage(named:"PlusUntapped"), for: .normal)
-        tapopeners.setBackgroundImage(UIImage(named:"QuestionUntapped"), for: .normal)
-        tapunhappy.setBackgroundImage(UIImage(named:"ResponseUntapped"), for: .normal)
+        tapFavorites.setBackgroundImage(UIImage(named: "FavoritesUntapped"), for: .normal)
+        tapCompliments.setBackgroundImage(UIImage(named:"ComplimentsTapped"), for: .normal)
+        tapAffirmative.setBackgroundImage(UIImage(named:"PlusUntapped"), for: .normal)
+        tapnegatory.setBackgroundImage(UIImage(named:"MinusUntapped"), for: .normal)
+        tapFlirty.setBackgroundImage(UIImage(named:"ResponseUntapped"), for: .normal)
     }
     
     func tappedresponses() {
         
-        tapmovies.setBackgroundImage(UIImage(named: "FavoritesUntapped"), for: .normal)
-        tapadore.setBackgroundImage(UIImage(named:"MinusUntapped"), for: .normal)
-        taphappy.setBackgroundImage(UIImage(named:"PlusUntapped"), for: .normal)
-        tapopeners.setBackgroundImage(UIImage(named:"QuestionUntapped"), for: .normal)
-        tapunhappy.setBackgroundImage(UIImage(named:"ResponseTapped"), for: .normal)
+        tapFavorites.setBackgroundImage(UIImage(named: "FavoritesUntapped"), for: .normal)
+        tapCompliments.setBackgroundImage(UIImage(named:"ComplimentsUntapped"), for: .normal)
+        tapAffirmative.setBackgroundImage(UIImage(named:"PlusUntapped"), for: .normal)
+        tapnegatory.setBackgroundImage(UIImage(named:"MinusUntapped"), for: .normal)
+        tapFlirty.setBackgroundImage(UIImage(named:"ResponseTapped"), for: .normal)
     }
     
 //    func addshit() {
@@ -216,7 +215,7 @@ class MessagesViewController: MSMessagesAppViewController, UICollectionViewDeleg
 //
 //        while functioncounter < 25 {
 //
-//        ref?.child("Messages").child("Adore").childByAutoId().updateChildValues(["Text" : "Text2"])
+//        ref?.child("Messages").child("Compliments").childByAutoId().updateChildValues(["Text" : "Text2"])
 //
 //            functioncounter += 1
 //        }
@@ -244,11 +243,12 @@ class MessagesViewController: MSMessagesAppViewController, UICollectionViewDeleg
 //
 //        } else {
         
-            feeling = "Questions"
+            feeling = "Affirmative"
             
             queryforfeelings()
-            tappedquestions()
+            tappedFlirty()
             collectionView.collectionViewLayout = gridLayout
+
 
 //        }
 
@@ -331,7 +331,7 @@ class MessagesViewController: MSMessagesAppViewController, UICollectionViewDeleg
             
         }
         
-        cell.image.image = UIImage(named: "Rectangle")
+        cell.image.image = UIImage(named: "PurpleRectangle")
         
         // Configure the cell
         return cell
