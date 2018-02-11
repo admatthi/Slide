@@ -21,7 +21,7 @@ class AgeViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
     @IBOutlet weak var pickerView: UIPickerView!
     @IBAction func tapLogin(_ sender: Any) {
         
-        comingfromlogin = true
+//        comingfromlogin = true
 
         self.performSegue(withIdentifier: "AgeToFirstName", sender: self)
         
