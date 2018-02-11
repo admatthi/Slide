@@ -7,6 +7,14 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseCore
+import FirebaseStorage
+import FirebaseDatabase
+import FirebaseAuth
+import Appsee
+
+var ref: DatabaseReference?
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +24,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        FirebaseApp.configure()
+        
+        Appsee.start("c693e035a56547669ab524f3b2649e10")
         return true
     }
 

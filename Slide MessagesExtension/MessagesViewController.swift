@@ -21,63 +21,81 @@ var ref: DatabaseReference?
 
 var feeling = String()
 
+var uid = String()
 
-class MessagesViewController: MSMessagesAppViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+var counter = Int()
+
+class MessagesViewController: MSMessagesAppViewController, UICollectionViewDelegate, UICollectionViewDataSource, UITextFieldDelegate {
     
+    @IBOutlet weak var backgroundlabel: UILabel!
+    @IBOutlet weak var messagecopiedlabel: UILabel!
     @IBOutlet weak var tapCompliments: UIButton!
-    @IBOutlet weak var tapAffirmative: UIButton!
-    @IBOutlet weak var tapnegatory: UIButton!
+    @IBOutlet weak var tapPopular: UIButton!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tapFlirty: UIButton!
-    @IBOutlet weak var tapFavorites: UIButton!
-    
+    @IBOutlet weak var tapadd: UIButton!
+    @IBOutlet weak var tappopular: UIButton!
+    @IBOutlet weak var tapfavorites: UIButton!
     @IBAction func tapFavorites(_ sender: Any) {
         
-        tappedfavorites()
+        collectionView.alpha = 1
+//        tappedfavorites()
         feeling = "Favorites"
-        
-        queryforfeelings()
+        tapsave.alpha = 0
+        textFIeld.alpha = 0
+        queryforfavorites()
     }
     var gridLayout: TextsFlowLayout = TextsFlowLayout(numberOfColumns: 2)
 
+    @IBOutlet weak var loginlabel: UILabel!
     @IBOutlet weak var loadingBackground: UILabel!
     
+    var timer = Timer()
+        
+    
+    @IBOutlet weak var tapsave: UIButton!
+    @IBOutlet weak var textFIeld: UITextField!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    @IBAction func tapAffirmative(_ sender: Any) {
+    @IBAction func tapSave(_ sender: Any) {
         
-        tappedAffirmative()
-        feeling = "Affirmative"
+        ref?.child("Submissions").child(uid).childByAutoId().updateChildValues(["Text" : textFIeld.text!])
         
+        collectionView.alpha = 1
+        
+        feeling = "Popular"
+        tappedpopular()
+        
+        queryforfeelings()
+        
+        ref?.child("Messages").child("Favorites").child(uid).childByAutoId().updateChildValues(["Text" : textFIeld.text!])
+        
+        self.view.endEditing(true)
+        
+        requestPresentationStyle(.compact)
+        
+    }
+    @IBAction func tapPopular(_ sender: Any) {
+        collectionView.alpha = 1
+        tapsave.alpha = 0
+        textFIeld.alpha = 0
+        feeling = "Popular"
+        tappedpopular()
+
         queryforfeelings()
         
     }
     
-    @IBAction func tapNegatory(_ sender: Any) {
+    @IBAction func tapAdd(_ sender: Any) {
         
-        tappedCompliments()
-        feeling = "Negatory"
-        
-        queryforfeelings()
+        tappedadd()
+        collectionView.alpha = 0
+        tapsave.alpha = 1
+        textFIeld.alpha = 1
+        textFIeld.text = ""
+        requestPresentationStyle(.expanded)
     }
-    @IBAction func tapCompliments(_ sender: Any) {
-        
-        tappedCompliments()
-        feeling = "Compliments"
-        
-        queryforfeelings()
-        
-        
-    }
-    
-    @IBAction func tapFlirty(_ sender: Any) {
-        
-        tappedresponses()
-        feeling = "Flirty"
-        
-        queryforfeelings()
-        
-    }
-    
+
+
     func startloading() {
         
         loadingBackground.alpha = 1
@@ -91,13 +109,40 @@ class MessagesViewController: MSMessagesAppViewController, UICollectionViewDeleg
         activityIndicator.stopAnimating()
     }
     
+    func queryforfavoriteresponses() {
+        
+        var functioncounter = 0
+        
+        for each in responseids {
+            
+            ref?.child("Messages").child("Favorites").child(uid).child(each).observeSingleEvent(of: .value, with: { (snapshot) in
+                
+                var value = snapshot.value as? NSDictionary
+                
+                if var topic = value?["Text"] as? String {
+                    
+                    texts[each] = topic
+                    
+                }
+                
+                functioncounter += 1
+                
+                if functioncounter == responseids.count {
+                    
+                    self.collectionView.reloadData()
+                }
+            })
+            
+        }
+    }
+    
     func queryforfeelingresponses() {
         
         var functioncounter = 0
         
         for each in responseids {
             
-            ref?.child("Messages").child(feeling).child(each).observeSingleEvent(of: .value, with: { (snapshot) in
+            ref?.child("Messages").child(each).observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 var value = snapshot.value as? NSDictionary
                 
@@ -123,8 +168,10 @@ class MessagesViewController: MSMessagesAppViewController, UICollectionViewDeleg
         
         var functioncounter = 0
         
-        ref?.child("Messages").child(feeling).observeSingleEvent(of: .value, with: { (snapshot) in
-            
+//        ref?.child("Messages").child(feeling).observeSingleEvent(of: .value, with: { (snapshot) in
+        
+        ref?.child("Messages").observeSingleEvent(of: .value, with: { (snapshot) in
+
             if let snapDict = snapshot.value as? [String:AnyObject] {
                 
                 for each in snapDict {
@@ -151,6 +198,55 @@ class MessagesViewController: MSMessagesAppViewController, UICollectionViewDeleg
         
     }
     
+    func queryforsubmitedresponseids(completed: @escaping ( () -> () )) {
+        
+        var functioncounter = 0
+        
+        ref?.child("Messages").child("Favorites").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            if let snapDict = snapshot.value as? [String:AnyObject] {
+                
+                for each in snapDict {
+                    
+                    let ids = each.key
+                    
+                    responseids.append(ids)
+                    
+                    functioncounter += 1
+                    
+                    if functioncounter == snapDict.count {
+                        
+                        completed()
+                        
+                    }
+                    
+                    
+                }
+                
+            } else {
+                
+                self.collectionView.reloadData()
+            }
+            
+        })
+        
+        
+    }
+    
+   
+    
+    func queryforfavorites() {
+        
+        responseids.removeAll()
+        texts.removeAll()
+        
+        queryforsubmitedresponseids { () -> () in
+            
+            self.queryforfavoriteresponses()
+            
+        }
+    }
+    
     func queryforfeelings() {
         
         responseids.removeAll()
@@ -164,49 +260,77 @@ class MessagesViewController: MSMessagesAppViewController, UICollectionViewDeleg
         }
     }
     
-    func tappedfavorites() {
+    @objc func addcounter() {
         
-        tapFavorites.setBackgroundImage(UIImage(named: "FavoritesTapped"), for: .normal)
-        tapCompliments.setBackgroundImage(UIImage(named:"ComplimentsUntapped"), for: .normal)
-        tapAffirmative.setBackgroundImage(UIImage(named:"PlusUntapped"), for: .normal)
-        tapnegatory.setBackgroundImage(UIImage(named:"MinusUntapped"), for: .normal)
-        tapFlirty.setBackgroundImage(UIImage(named:"ResponseUntapped"), for: .normal)
+        counter += 1
+        
+        if counter > 3 {
+            
+            timer.invalidate()
+            counter = 0
+            messagecopiedlabel.alpha = 0
+            backgroundlabel.alpha = 0
+        }
     }
     
-    func tappedFlirty() {
+    func showcopied() {
         
-        tapFavorites.setBackgroundImage(UIImage(named: "FavoritesUntapped"), for: .normal)
-        tapCompliments.setBackgroundImage(UIImage(named:"ComplimentsUntapped"), for: .normal)
-        tapAffirmative.setBackgroundImage(UIImage(named:"PlusUntapped"), for: .normal)
-        tapnegatory.setBackgroundImage(UIImage(named:"MinusUntapped"), for: .normal)
-        tapFlirty.setBackgroundImage(UIImage(named:"ResponseUntapped"), for: .normal)
+        messagecopiedlabel.alpha = 1
+        backgroundlabel.alpha = 1
+        
+        
+    }
+    
+    func tappedadd() {
+        
+        
+    }
+    
+    func tappedfavorites() {
+        
+        
+    }
+    
+    func tappedpopular() {
+        
+        
+    }
+    
+    
+    func tappedFlirty() {
+//
+//        tapFavorites.setBackgroundImage(UIImage(named: "FavoritesUntapped"), for: .normal)
+//        tapCompliments.setBackgroundImage(UIImage(named:"ComplimentsUntapped"), for: .normal)
+//        tapPopular.setBackgroundImage(UIImage(named:"PlusUntapped"), for: .normal)
+//        tapAdd.setBackgroundImage(UIImage(named:"MinusUntapped"), for: .normal)
+//        tapFlirty.setBackgroundImage(UIImage(named:"ResponseUntapped"), for: .normal)
     }
     
     func tappedAffirmative() {
-        
-        tapFavorites.setBackgroundImage(UIImage(named: "FavoritesUntapped"), for: .normal)
-        tapCompliments.setBackgroundImage(UIImage(named:"ComplimentsUntapped"), for: .normal)
-        tapAffirmative.setBackgroundImage(UIImage(named:"PlusTapped"), for: .normal)
-        tapnegatory.setBackgroundImage(UIImage(named:"QuestionUntapped"), for: .normal)
-        tapFlirty.setBackgroundImage(UIImage(named:"ResponseUntapped"), for: .normal)
+//
+//        tapFavorites.setBackgroundImage(UIImage(named: "FavoritesUntapped"), for: .normal)
+//        tapCompliments.setBackgroundImage(UIImage(named:"ComplimentsUntapped"), for: .normal)
+//        tapPopular.setBackgroundImage(UIImage(named:"PlusTapped"), for: .normal)
+//        tapAdd.setBackgroundImage(UIImage(named:"QuestionUntapped"), for: .normal)
+//        tapFlirty.setBackgroundImage(UIImage(named:"ResponseUntapped"), for: .normal)
     }
     
     func tappedCompliments() {
         
-        tapFavorites.setBackgroundImage(UIImage(named: "FavoritesUntapped"), for: .normal)
-        tapCompliments.setBackgroundImage(UIImage(named:"ComplimentsTapped"), for: .normal)
-        tapAffirmative.setBackgroundImage(UIImage(named:"PlusUntapped"), for: .normal)
-        tapnegatory.setBackgroundImage(UIImage(named:"MinusUntapped"), for: .normal)
-        tapFlirty.setBackgroundImage(UIImage(named:"ResponseUntapped"), for: .normal)
+//        tapFavorites.setBackgroundImage(UIImage(named: "FavoritesUntapped"), for: .normal)
+//        tapCompliments.setBackgroundImage(UIImage(named:"ComplimentsTapped"), for: .normal)
+//        tapPopular.setBackgroundImage(UIImage(named:"PlusUntapped"), for: .normal)
+//        tapAdd.setBackgroundImage(UIImage(named:"MinusUntapped"), for: .normal)
+//        tapFlirty.setBackgroundImage(UIImage(named:"ResponseUntapped"), for: .normal)
     }
     
     func tappedresponses() {
         
-        tapFavorites.setBackgroundImage(UIImage(named: "FavoritesUntapped"), for: .normal)
-        tapCompliments.setBackgroundImage(UIImage(named:"ComplimentsUntapped"), for: .normal)
-        tapAffirmative.setBackgroundImage(UIImage(named:"PlusUntapped"), for: .normal)
-        tapnegatory.setBackgroundImage(UIImage(named:"MinusUntapped"), for: .normal)
-        tapFlirty.setBackgroundImage(UIImage(named:"ResponseTapped"), for: .normal)
+//        tapFavorites.setBackgroundImage(UIImage(named: "FavoritesUntapped"), for: .normal)
+//        tapCompliments.setBackgroundImage(UIImage(named:"ComplimentsUntapped"), for: .normal)
+//        tapPopular.setBackgroundImage(UIImage(named:"PlusUntapped"), for: .normal)
+//        tapAdd.setBackgroundImage(UIImage(named:"MinusUntapped"), for: .normal)
+//        tapFlirty.setBackgroundImage(UIImage(named:"ResponseTapped"), for: .normal)
     }
     
 //    func addshit() {
@@ -215,44 +339,64 @@ class MessagesViewController: MSMessagesAppViewController, UICollectionViewDeleg
 //
 //        while functioncounter < 25 {
 //
-//        ref?.child("Messages").child("Compliments").childByAutoId().updateChildValues(["Text" : "Text2"])
+//        ref?.child("Messages").child("Popular").childByAutoId().updateChildValues(["Text" : "Text2"])
 //
 //            functioncounter += 1
 //        }
 //    }
-    
+//
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         startloading()
+                
         if(FirebaseApp.app() == nil){
             FirebaseApp.configure()
         }
         ref = Database.database().reference()
 
+        let storagePath = UserDefaults.standard.object(forKey: "uid") as? String
+
+        var defaults = UserDefaults(suiteName: "group.com.aatech.Slide")
+
+        defaults?.synchronize()
         
-//        if Auth.auth().currentUser == nil {
-//            // Do smth if user is not logged in
-//
-//            DispatchQueue.main.async {
-//
-//                self.performSegue(withIdentifier: "PlayToFirstName", sender: self)
-//
-//
-//            }
-//
-//        } else {
+        counter = 0
         
-            feeling = "Affirmative"
+        messagecopiedlabel.alpha = 0
+        backgroundlabel.alpha = 0
+        
+        if defaults!.string(forKey: "uid") == nil {
+            // Do smth if user is not logged in
+
+            collectionView.alpha = 0
+            textFIeld.alpha = 0
+            tapsave.alpha = 0
+            loginlabel.alpha = 1
+            tapadd.alpha = 0
+            tapfavorites.alpha = 0
+            tappopular.alpha = 0
+            hideloading()
+            
+        } else {
+        
+            feeling = "Popular"
+            textFIeld.delegate = self as! UITextFieldDelegate
+            tapadd.alpha = 1
+            tapfavorites.alpha = 1
+            tappopular.alpha = 1
+            uid = defaults!.string(forKey: "uid")!
+            
+            collectionView.alpha = 1
+            loginlabel.alpha = 0
             
             queryforfeelings()
-            tappedFlirty()
+//            tappedFlirty()
             collectionView.collectionViewLayout = gridLayout
-
 
 //        }
 
-        
+        }
 
     }
     
@@ -260,6 +404,31 @@ class MessagesViewController: MSMessagesAppViewController, UICollectionViewDeleg
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        self.view.endEditing(true)
+        
+    }
+    
+    func convertextoimage(for view: UIView) -> UIImage {
+        
+        UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, 0)
+        if view.responds(to: Selector("drawViewHierarchyInRect:afterScreenUpdates:")) {
+            view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+        }
+        else {
+            view.layer.render(in: UIGraphicsGetCurrentContext()!)
+        }
+        // ... otherwise, fall back to tried and true methods
+        let image: UIImage? = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        var resizedimage = self.resizeImage(image: image!, targetSize: CGSize(width: 350.0, height: 140.0))
+        
+        return resizedimage ?? UIImage()
+    }
+
     
     // MARK: - Conversation Handling
     
@@ -313,7 +482,14 @@ class MessagesViewController: MSMessagesAppViewController, UICollectionViewDeleg
                         numberOfItemsInSection section: Int) -> Int {
         
         
-        return texts.count
+        if texts.count > 0 {
+            
+            return texts.count
+            
+        } else {
+            
+            return 1
+        }
         
         
 //        return 5
@@ -329,9 +505,13 @@ class MessagesViewController: MSMessagesAppViewController, UICollectionViewDeleg
             
             cell.textlabel.text = texts[responseids[indexPath.row]]
             
+            cell.image.image = UIImage(named: "PurpleChatBubble")
+
+        } else {
+            
+            cell.textlabel.text = "You have no \(feeling) messages yet."
         }
         
-        cell.image.image = UIImage(named: "PurpleRectangle")
         
         // Configure the cell
         return cell
@@ -339,9 +519,23 @@ class MessagesViewController: MSMessagesAppViewController, UICollectionViewDeleg
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-//        textDocumentProxy.insertText(texts[responseids[indexPath.row]]!)
+        ref?.child("SentMessage").child(uid).childByAutoId().updateChildValues(["Text" : [responseids[indexPath.row]]])
         
-        self.activeConversation?.insertText(texts[responseids[indexPath.row]]!, completionHandler: nil)
+        ref?.child("Messages").child("Favorites").child(uid).childByAutoId().updateChildValues(["Text" : texts[responseids[indexPath.row]]])
+        
+        let cell = collectionView.cellForItem(at: indexPath) as! TextsCollectionViewCell
+        
+        var selectedcell = convertextoimage(for: cell)
+
+        UIPasteboard.general.image = selectedcell
+        
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(MessagesViewController.addcounter), userInfo: nil, repeats: true)
+
+        showcopied()
+        
+//        self.activeConversation?.insertText(texts[responseids[indexPath.row]]!, completionHandler: nil)
+        
+    
         
     }
     
@@ -387,5 +581,30 @@ class MessagesViewController: MSMessagesAppViewController, UICollectionViewDeleg
         
     }
     
+    func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage {
+        let size = image.size
+        
+        let widthRatio  = targetSize.width  / size.width
+        let heightRatio = targetSize.height / size.height
+        
+        // Figure out what our orientation is, and use that to form the rectangle
+        var newSize: CGSize
+        if(widthRatio > heightRatio) {
+            newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
+        } else {
+            newSize = CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
+        }
+        
+        // This is the rect that we've calculated out and this is what is actually used below
+        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
+        
+        // Actually do the resizing to the rect using the ImageContext stuff
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+        image.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage!
+    }
 
 }

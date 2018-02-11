@@ -13,6 +13,7 @@ var FirstName = String()
 
 class FirstnameViewController: UIViewController, UITextFieldDelegate {
 
+    @IBOutlet weak var errorlabel: UILabel!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var tapnext: UIButton!
     @IBAction func tapNext(_ sender: Any) {
@@ -20,7 +21,7 @@ class FirstnameViewController: UIViewController, UITextFieldDelegate {
         if textField.text != "" {
             
             FirstName = textField.text!
-            
+            myfirstname = FirstName
             self.performSegue(withIdentifier: "FirstNameToPassword", sender: self)
             
         } else {
@@ -32,6 +33,7 @@ class FirstnameViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         textField.delegate = self
         textField.becomeFirstResponder()
+        errorlabel.alpha = 0
         // Do any additional setup after loading the view.
     }
 
@@ -52,6 +54,7 @@ class FirstnameViewController: UIViewController, UITextFieldDelegate {
             
             tapnext.setBackgroundImage(UIImage(named: "WhiteButton"), for: .normal)
             tapnext.isEnabled = true
+            
         } else {
             
             tapnext.setBackgroundImage(UIImage(named: "PurpleButtonReadyToPressNot"), for: .normal)
