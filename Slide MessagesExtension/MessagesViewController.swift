@@ -519,21 +519,21 @@ class MessagesViewController: MSMessagesAppViewController, UICollectionViewDeleg
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        ref?.child("SentMessage").child(uid).childByAutoId().updateChildValues(["Text" : [responseids[indexPath.row]]])
+        ref?.child("SentMessage").child(uid).childByAutoId().updateChildValues(["Text" : [texts[responseids[indexPath.row]]]])
         
         ref?.child("Messages").child("Favorites").child(uid).childByAutoId().updateChildValues(["Text" : texts[responseids[indexPath.row]]])
         
         let cell = collectionView.cellForItem(at: indexPath) as! TextsCollectionViewCell
         
-        var selectedcell = convertextoimage(for: cell)
+//        var selectedcell = convertextoimage(for: cell)
 
-        UIPasteboard.general.image = selectedcell
+//        UIPasteboard.general.string = texts[responseids[indexPath.row]]]
         
-        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(MessagesViewController.addcounter), userInfo: nil, repeats: true)
+//        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(MessagesViewController.addcounter), userInfo: nil, repeats: true)
 
-        showcopied()
+//        showcopied()
         
-//        self.activeConversation?.insertText(texts[responseids[indexPath.row]]!, completionHandler: nil)
+        self.activeConversation?.insertText(texts[responseids[indexPath.row]]!, completionHandler: nil)
         
     
         

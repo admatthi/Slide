@@ -10,6 +10,8 @@ import UIKit
 
 class AppTextsCollectionViewCell: UICollectionViewCell {
     
+    @IBOutlet weak var textlabel: UITextView!
     @IBOutlet weak var image: UIImageView!
-    @IBOutlet weak var textlabel: UILabel!
+    
+    @IBOutlet weak var little: UIImageView!
 }

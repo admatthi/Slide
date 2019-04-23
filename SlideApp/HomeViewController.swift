@@ -26,12 +26,14 @@ var feelingcolor = String()
 var searchedtext = String()
 var searchrelevantmessages = [String:String]()
 
-class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
+class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     
     @IBOutlet weak var loadingbackground: UILabel!
-    var gridLayout: TextsFlowLayout = TextsFlowLayout(numberOfColumns: 2)
+//    var gridLayout: TextsFlowLayout = TextsFlowLayout(numberOfColumns: 2)
 
+    
+    
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var collectionView: UICollectionView!
 
@@ -82,13 +84,15 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
         feeling = "Positive"
         feelingcolor = "GreenRectangle"
         collectionView.alpha = 1
-//        queryforfeelings()
+        startloading()
+        queryforfeelings()
     }
     @IBAction func tapFavorites(_ sender: Any) {
 //        tappedFavorites()
         feeling = "Favorites"
         feelingcolor = "PurpleRectangle"
         collectionView.alpha = 1
+        startloading()
         queryforfavorites()
         
     }
@@ -108,10 +112,10 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
         
         self.view.endEditing(true)
         
-       var newimage = convertextoimage(for: addtextField)
+//       var newimage = convertextoimage(for: addtextField)
         
-        textimages.append(newimage)
-        collectionView.reloadData()
+//        textimages.append(newimage)
+//        collectionView.reloadData()
         
     }
     
@@ -129,15 +133,36 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
 
                     texts[each] = topic
 
-                }
+                    var height = self.estimateFrameForText(text: topic).height + 5.0
+                    
+                    self.heights[each] = height
+                    
+                    print(height)
+                    functioncounter += 1
+
+                } else {
+                    
+                    
+                    texts[each] = "Duh"
+                    
+                    var height = self.estimateFrameForText(text: "Duh").height + 5.0
+                    
+                    self.heights[each] = height
+                    
+                    functioncounter += 1
+
+        }
         
         
-                
-                functioncounter += 1
-                
+
+
+        
+        
                 if functioncounter == responseids.count {
+                    
                     self.hideloading()
                     self.collectionView.reloadData()
+                    self.collectionView2.reloadData()
                 }
             })
             
@@ -165,6 +190,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
                 if functioncounter == responseids.count {
                     self.hideloading()
                     self.collectionView.reloadData()
+                    self.collectionView2.reloadData()
                 }
             })
             
@@ -202,6 +228,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
                 
                self.hideloading()
                 self.collectionView.reloadData()
+                self.collectionView2.reloadData()
             }
             
         })
@@ -238,6 +265,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
                 
                 self.hideloading()
                 self.collectionView.reloadData()
+                self.collectionView2.reloadData()
             }
             
         })
@@ -295,6 +323,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
                     
                     self.hideloading()
                     collectionView.reloadData()
+                    self.collectionView2.reloadData()
                 }
             }
             
@@ -326,6 +355,14 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        
+        objectives.removeAll()
+        objectives.append("Tinder Openers")
+        objectives.append("Breakups")
+        objectives.append("Apologies")
+        objectives.append("DMs")
+        objectives.append("Ghosts")
+        objectives.append("Compliments")
         
         ref = Database.database().reference()
         
@@ -361,7 +398,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
             
             
             queryforfeelings()
-            collectionView.collectionViewLayout = gridLayout
+//            collectionView.collectionViewLayout = gridLayout
             
             
             //        }
@@ -369,6 +406,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
         }
 
         addtextField.delegate = self as! UITextFieldDelegate
+        
         // Do any additional setup after loading the view.
     }
 
@@ -390,6 +428,12 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
         
+        if collectionView.tag == 2 {
+            
+            return objectives.count
+            
+        } else {
+        
         if texts.count > 0 {
         
             return texts.count
@@ -399,51 +443,300 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
             return 1
         }
         
-        
+        }
         //        return 5
         
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
+        if collectionView.tag == 2 {
+            
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Categories", for: indexPath) as! CategoriesCollectionViewCell
+            
+            cell.titlelabel.text = objectives[indexPath.row]
+            //            cell.titlelabel.sizeToFit()
+            
+            cell.selectedimage.layer.cornerRadius = 5.0
+            cell.selectedimage.layer.masksToBounds = true
+            collectionView2.alpha = 1
+            
+            if selectedindex == 0 {
+                
+                if indexPath.row == 0 {
+                    
+                    cell.titlelabel.alpha = 1
+                    cell.selectedimage.alpha = 1
+                    
+                } else {
+                    
+                    cell.titlelabel.alpha = 0.25
+                    cell.selectedimage.alpha = 0
+                    
+                }
+                
+            }
+            
+            if selectedindex == 1 {
+                
+                if indexPath.row == 1 {
+                    
+                    cell.titlelabel.alpha = 1
+                    cell.selectedimage.alpha = 1
+                    
+                } else {
+                    
+                    cell.titlelabel.alpha = 0.25
+                    cell.selectedimage.alpha = 0
+                    
+                }
+                
+            }
+            
+            if selectedindex == 2 {
+                
+                if indexPath.row == 2 {
+                    
+                    cell.titlelabel.alpha = 1
+                    cell.selectedimage.alpha = 1
+                    
+                } else {
+                    
+                    cell.titlelabel.alpha = 0.25
+                    cell.selectedimage.alpha = 0
+                    
+                }
+                
+            }
+            
+            if selectedindex == 3 {
+                
+                if indexPath.row == 3 {
+                    
+                    cell.titlelabel.alpha = 1
+                    cell.selectedimage.alpha = 1
+                    
+                } else {
+                    
+                    cell.titlelabel.alpha = 0.25
+                    cell.selectedimage.alpha = 0
+                    
+                }
+                
+            }
+            
+            if selectedindex == 4 {
+                
+                if indexPath.row == 4 {
+                    
+                    cell.titlelabel.alpha = 1
+                    cell.selectedimage.alpha = 1
+                    
+                } else {
+                    
+                    cell.titlelabel.alpha = 0.25
+                    cell.selectedimage.alpha = 0
+                    
+                }
+                
+            }
+            
+            if selectedindex == 5 {
+                
+                if indexPath.row == 5 {
+                    
+                    cell.titlelabel.alpha = 1
+                    cell.selectedimage.alpha = 1
+                    
+                } else {
+                    
+                    cell.titlelabel.alpha = 0.25
+                    cell.selectedimage.alpha = 0
+                    
+                }
+                
+            }
+            
+            if selectedindex == 6 {
+                
+                if indexPath.row == 6 {
+                    
+                    cell.titlelabel.alpha = 1
+                    cell.selectedimage.alpha = 1
+                    
+                } else {
+                    
+                    cell.titlelabel.alpha = 0.25
+                    cell.selectedimage.alpha = 0
+                    
+                }
+                
+            }
+            
+            if selectedindex == 7 {
+                
+                if indexPath.row == 7 {
+                    
+                    cell.titlelabel.alpha = 1
+                    cell.selectedimage.alpha = 1
+                    
+                } else {
+                    
+                    cell.titlelabel.alpha = 0.25
+                    cell.selectedimage.alpha = 0
+                    
+                }
+                
+            }
+            
+            return cell
+
+            
+        } else {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Texts", for: indexPath) as! AppTextsCollectionViewCell
         
         if texts.count > indexPath.row {
             
             cell.textlabel.text = texts[responseids[indexPath.row]]
             
-            cell.image.image = UIImage(named: "BlackChatBubbleSmall")
+            cell.image.layer.cornerRadius = 15.0
+            cell.image.clipsToBounds = true
+            cell.little.alpha = 1
+            cell.little.clipsToBounds = true
+//            cell.image.image = UIImage(named: "PurpleChatBubble")
 
+//            cell.textlabel.sizeToFit()
+//
+//            // Customize cell height
+            
+//            cell.frame = CGRect(x: cell.frame.origin.x, y: cell.frame.origin.y, width: cell.frame.size.width, height: cell.textlabel.frame.height)
+            
+            return cell
+            
         } else {
             
 //            cell.textlabel.text = "You have no \(feeling) messages yet."
 //            cell.image.image = UIImage(named: "PurpleChatBubble")
+            return cell
+
+        }
+        
+        }
+        
+        // Configure the cell
+    }
+    
+    @IBOutlet weak var collectionView2: UICollectionView!
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        if collectionView.tag == 2 {
+            
+            return CGSize(width: 141, height: 66)
+
+            
+        } else {
+        var height: CGFloat = 500
+        
+        //we are just measuring height so we add a padding constant to give the label some room to breathe!
+        var padding: CGFloat = 5
+        
+        //estimate each cell's height
+        
+        var screenSize = collectionView.bounds
+        var screenWidth = screenSize.width
+        var screenHeight = screenSize.height
+        
+        var columnwidth = (screenSize.width/2) - 5
+        
+        if texts.count > indexPath.row {
+        
+        if let text2 = texts[responseids[indexPath.item]] {
+            
+            
+            height = text2.height(constraintedWidth: columnwidth-5, font: UIFont.systemFont(ofSize: 18)) + 25
+            
+            
+            print(height)
+            
+            print("Yup")
+            
+        } else {
+            
+            print("No1")
+            }
+        
+        } else {
+            
+            height = 200
+            
+            print("No2")
 
         }
         
         
-        // Configure the cell
-        return cell
+        return CGSize(width: columnwidth, height: 74)
+            
+        }
+
+    }
+  
+    
+    var heights = [String:CGFloat]()
+    
+     func estimateFrameForText(text: String) -> CGRect {
+        //we make the height arbitrarily large so we don't undershoot height in calculation
+        let height: CGFloat = 500
+        
+        let size = CGSize(width: 181, height: height)
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        let attributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 18, weight: UIFont.Weight.light)]
+        
+        return NSString(string: text).boundingRect(with: size, options: options, attributes: attributes, context: nil)
     }
     
+    var selectedindex = Int()
+    var selectedobjective = String()
+    var objectives = [String]()
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         //        textDocumentProxy.insertText(texts[responseids[indexPath.row]]!)
         
+        if collectionView.tag == 2 {
+            
+            selectedindex = indexPath.row
+            
+            collectionView2.scrollToItem(at: indexPath, at: UICollectionViewScrollPosition.centeredHorizontally, animated: true)
+            
+            
+                selectedobjective = objectives[indexPath.row]
+    
+                queryforfeelings()
+                
+                
+                collectionView2.reloadData()
+                
+            } else {
         ref?.child("SentMessage").child(uid).childByAutoId().updateChildValues(["Text" : [responseids[indexPath.row]]])
         
         ref?.child("Messages").child("Favorites").child(uid).childByAutoId().updateChildValues(["Text" : texts[responseids[indexPath.row]]])
         
         let cell = collectionView.cellForItem(at: indexPath) as! AppTextsCollectionViewCell
     
-        var selectedcell = convertextoimage(for: cell)
+//        cell.image.image = UIImage(named: "BlackChatBubbleSmall")
+        
+//        var selectedcell = convertextoimage(for: cell)
+        
 
-        let activityVC = UIActivityViewController(activityItems: [selectedcell], applicationActivities: nil )
+        let activityVC = UIActivityViewController(activityItems: [texts[responseids[indexPath.row]]], applicationActivities: nil )
         activityVC.popoverPresentationController?.sourceView = self.view
         
         self.present(activityVC, animated: true, completion: nil)
         
-        UIPasteboard.general.image = selectedcell
+        }
+        
+    }
+//        UIPasteboard.general.image = selectedcell
         
 //        guard let messageAppURL = NSURL(string: "sms:")
 //            else { return }
@@ -451,8 +744,9 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
 //            UIApplication.shared.openURL(messageAppURL as URL)
 //        }
         
-    }
     
+
+
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
 
@@ -548,5 +842,24 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return newImage!
+    }
+}
+
+extension String {
+    func height(constraintedWidth width: CGFloat, font: UIFont) -> CGFloat {
+        let label =  UILabel(frame: CGRect(x: 0, y: 0, width: width, height: .greatestFiniteMagnitude))
+        label.numberOfLines = 0
+        label.text = self
+        label.font = font
+        label.sizeToFit()
+        
+        return label.frame.height
+    }
+    
+    func width(withConstrainedHeight height: CGFloat, font: UIFont) -> CGFloat {
+        let constraintRect = CGSize(width: .greatestFiniteMagnitude, height: height)
+        let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [NSAttributedStringKey.font: font], context: nil)
+        
+        return ceil(boundingBox.width)
     }
 }

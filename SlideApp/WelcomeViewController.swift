@@ -87,9 +87,9 @@ class WelcomeViewController: UIViewController, UICollectionViewDelegate, UIColle
         
         //        textDocumentProxy.insertText(texts[responseids[indexPath.row]]!)
         
-        ref?.child("SentMessage").child(uid).childByAutoId().updateChildValues(["Text" : [responseids[indexPath.row]]])
+        ref?.child("SentMessage").child(uid).childByAutoId().updateChildValues(["Text" : [testtexts[indexPath.row]]])
         
-        ref?.child("Messages").child("Favorites").child(uid).childByAutoId().updateChildValues(["Text" : texts[responseids[indexPath.row]]])
+        ref?.child("Messages").child("Favorites").child(uid).childByAutoId().updateChildValues(["Text" : [testtexts[indexPath.row]]])
 
         let cell = collectionView.cellForItem(at: indexPath) as! AppTextsCollectionViewCell
         

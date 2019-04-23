@@ -24,6 +24,8 @@ class TextsFlowLayout: UICollectionViewFlowLayout {
         fatalError("init(coder:) has not been implemented")
     }
     
+
+    
     override var itemSize: CGSize {
         get {
             if let collectionView = collectionView {

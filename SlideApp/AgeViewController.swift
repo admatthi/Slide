@@ -15,13 +15,21 @@ var myfirstname = String()
 
 class AgeViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 
+    @IBAction func tapPrivacyPolicy(_ sender: Any) {
+        
+        if let url = NSURL(string: "https://getslideapp.weebly.com/terms--policy.html"
+            ) {
+            UIApplication.shared.openURL(url as URL)
+        }
+        
+    }
     @IBOutlet weak var agelabel: UILabel!
     @IBOutlet weak var tapgetstarted: UIButton!
     @IBOutlet weak var taplogin: UIButton!
     @IBOutlet weak var pickerView: UIPickerView!
     @IBAction func tapLogin(_ sender: Any) {
         
-//        comingfromlogin = true
+        comingfromlogin = true
 
         self.performSegue(withIdentifier: "AgeToFirstName", sender: self)
         

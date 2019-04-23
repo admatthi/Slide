@@ -25,6 +25,7 @@
 		9D60046D201504E200A3105B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D60046C201504E200A3105B /* Assets.xcassets */; };
 		9D6004792015070D00A3105B /* TextsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6004782015070D00A3105B /* TextsCollectionViewCell.swift */; };
 		9D60047B2015072200A3105B /* TextsFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D60047A2015072200A3105B /* TextsFlowLayout.swift */; };
+		9D88654C226FA5DF003AE80B /* CategoriesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D88654B226FA5DF003AE80B /* CategoriesCollectionViewCell.swift */; };
 		9D9C3DE32022C9C300DF5822 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9C3DE22022C9C300DF5822 /* AppDelegate.swift */; };
 		9D9C3DE52022C9C300DF5822 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9C3DE42022C9C300DF5822 /* ViewController.swift */; };
 		9D9C3DE82022C9C300DF5822 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D9C3DE62022C9C300DF5822 /* Main.storyboard */; };
@@ -101,6 +102,7 @@
 		9D60048020150DFB00A3105B /* Slide MessagesExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Slide MessagesExtension.entitlements"; sourceTree = "<group>"; };
 		9D6004812016D0C000A3105B /* FirstnameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstnameViewController.swift; sourceTree = "<group>"; };
 		9D6004832016D0D200A3105B /* PasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordViewController.swift; sourceTree = "<group>"; };
+		9D88654B226FA5DF003AE80B /* CategoriesCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesCollectionViewCell.swift; sourceTree = "<group>"; };
 		9D9C3DE02022C9C300DF5822 /* SlideApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SlideApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D9C3DE22022C9C300DF5822 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9D9C3DE42022C9C300DF5822 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -248,6 +250,7 @@
 				9D6004832016D0D200A3105B /* PasswordViewController.swift */,
 				9D3DED1C202E8C1900CECD81 /* WelcomeViewController.swift */,
 				9D1F64F42027B4BC00656F61 /* HomeViewController.swift */,
+				9D88654B226FA5DF003AE80B /* CategoriesCollectionViewCell.swift */,
 				9D1F64F62027B4FD00656F61 /* AppTextsCollectionViewCell.swift */,
 				9D1F64F82027B70300656F61 /* TextsFlowLayout.swift */,
 				9D9C3DE62022C9C300DF5822 /* Main.storyboard */,
@@ -660,6 +663,7 @@
 				9D1F64F52027B4BC00656F61 /* HomeViewController.swift in Sources */,
 				9D9C3DE52022C9C300DF5822 /* ViewController.swift in Sources */,
 				9D1F64F72027B4FD00656F61 /* AppTextsCollectionViewCell.swift in Sources */,
+				9D88654C226FA5DF003AE80B /* CategoriesCollectionViewCell.swift in Sources */,
 				9D9C3E0F2022CA8200DF5822 /* PasswordViewController.swift in Sources */,
 				9D9C3E0E2022CA8000DF5822 /* FirstnameViewController.swift in Sources */,
 				9D9C3DE32022C9C300DF5822 /* AppDelegate.swift in Sources */,
