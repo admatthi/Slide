@@ -12,22 +12,35 @@ import FirebaseCore
 import FirebaseStorage
 import FirebaseDatabase
 import FirebaseAuth
-import Appsee
+import Purchases
 
 var ref: DatabaseReference?
+
+protocol SnippetsPurchasesDelegate: AnyObject {
+    
+    func purchaseCompleted(product: String)
+    
+}
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    var purchases: Purchases?
+    
+    weak var purchasesdelegate : SnippetsPurchasesDelegate?
+    
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         print("Application did finish launching")
         
         FirebaseApp.configure()
         
-        Appsee.start("c693e035a56547669ab524f3b2649e10")
+        purchases = Purchases.configure(withAPIKey: "TwecCFVIQjxwkQTnJpsfLTgsAGyvVcKv", appUserID: nil)
+
+        purchases!.delegate = self
+        
         return true
     }
 
@@ -53,6 +66,112 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-
+    func letsgo() {
+        
+        
+        
+        ref?.child("Users").child(uid).updateChildValues(["Purchased" : "Yes"])
+        
+        let mainStoryboardIpad : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        
+        
+        let initialViewControlleripad : UIViewController = mainStoryboardIpad.instantiateViewController(withIdentifier: "Chat") as UIViewController
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        self.window?.rootViewController = initialViewControlleripad
+        self.window?.makeKeyAndVisible()//
+        
+    }
 }
 
+extension AppDelegate: PurchasesDelegate {
+    func purchases(_ purchases: Purchases, completedTransaction transaction: SKPaymentTransaction, withUpdatedInfo purchaserInfo: PurchaserInfo) {
+        
+        self.purchasesdelegate?.purchaseCompleted(product: transaction.payment.productIdentifier)
+        
+        
+        
+        ref?.child("Users").child(uid).updateChildValues(["Purchased" : "True"])
+        letsgo()
+        
+    }
+    
+    func purchases(_ purchases: Purchases, receivedUpdatedPurchaserInfo purchaserInfo: PurchaserInfo) {
+        //        handlePurchaserInfo(purchaserInfo)
+        
+        print(purchaserInfo)
+        
+    }
+    
+    func purchases(_ purchases: Purchases, failedToUpdatePurchaserInfoWithError error: Error) {
+        print(error)
+        
+        
+    }
+    
+    func purchases(_ purchases: Purchases, failedTransaction transaction: SKPaymentTransaction, withReason failureReason: Error) {
+        print(failureReason)
+        
+        
+    }
+    
+    func purchases(_ purchases: Purchases, restoredTransactionsWith purchaserInfo: PurchaserInfo) {
+        //        handlePurchaserInfo(purchaserInfo)
+        ref?.child("Users").child(uid).updateChildValues(["Purchased" : "True"])
+        
+        letsgo()
+        
+        
+    }
+    
+    func purchases(_ purchases: Purchases, failedToRestoreTransactionsWithError error: Error) {
+        print(error)
+        
+    }
+}
+
+
+class SegueFromLeft: UIStoryboardSegue
+{
+    override func perform()
+    {
+        let src = self.source
+        let dst = self.destination
+        
+        src.view.superview?.insertSubview(dst.view, aboveSubview: src.view)
+        dst.view.transform = CGAffineTransform(translationX: -src.view.frame.size.width, y: 0)
+        
+        UIView.animate(withDuration: 0.25,
+                       delay: 0.0,
+                       options: UIView.AnimationOptions.curveEaseInOut,
+                       animations: {
+                        dst.view.transform = CGAffineTransform(translationX: 0, y: 0)
+        },
+                       completion: { finished in
+                        src.present(dst, animated: false, completion: nil)
+        }
+        )
+    }
+}
+
+class SegueFromRight: UIStoryboardSegue
+{
+    override func perform()
+    {
+        let src = self.source
+        let dst = self.destination
+        
+        src.view.superview?.insertSubview(dst.view, aboveSubview: src.view)
+        dst.view.transform = CGAffineTransform(translationX: src.view.frame.size.width, y: 0)
+        
+        UIView.animate(withDuration: 0.25,
+                       delay: 0.0,
+                       options: UIView.AnimationOptions.curveEaseInOut,
+                       animations: {
+                        dst.view.transform = CGAffineTransform(translationX: 0, y: 0)
+        },
+                       completion: { finished in
+                        src.present(dst, animated: false, completion: nil)
+        }
+        )
+    }
+}

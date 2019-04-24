@@ -1,5 +1,4 @@
 PODS:
-  - Appsee (2.3.4)
   - Firebase (4.1.1):
     - Firebase/Core (= 4.1.1)
   - Firebase/Auth (4.1.1):
@@ -20,14 +19,14 @@ PODS:
   - FirebaseAnalytics (4.0.3):
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
-    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
     - nanopb (~> 0.3)
   - FirebaseAuth (4.1.1):
     - FirebaseAnalytics (~> 4.0)
-    - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
+    - "GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)"
     - GTMSessionFetcher/Core (~> 1.1)
   - FirebaseCore (4.0.6):
-    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
     - nanopb (~> 0.3)
   - FirebaseDatabase (4.0.2):
     - FirebaseAnalytics (~> 4.0)
@@ -50,13 +49,13 @@ PODS:
   - GoogleToolboxForMac/Defines (2.1.1)
   - GoogleToolboxForMac/Logger (2.1.1):
     - GoogleToolboxForMac/Defines (= 2.1.1)
-  - GoogleToolboxForMac/NSData+zlib (2.1.1):
+  - "GoogleToolboxForMac/NSData+zlib (2.1.1)":
     - GoogleToolboxForMac/Defines (= 2.1.1)
-  - GoogleToolboxForMac/NSDictionary+URLArguments (2.1.1):
+  - "GoogleToolboxForMac/NSDictionary+URLArguments (2.1.1)":
     - GoogleToolboxForMac/DebugUtils (= 2.1.1)
     - GoogleToolboxForMac/Defines (= 2.1.1)
-    - GoogleToolboxForMac/NSString+URLArguments (= 2.1.1)
-  - GoogleToolboxForMac/NSString+URLArguments (2.1.1)
+    - "GoogleToolboxForMac/NSString+URLArguments (= 2.1.1)"
+  - "GoogleToolboxForMac/NSString+URLArguments (2.1.1)"
   - GTMSessionFetcher/Core (1.1.11)
   - leveldb-library (1.18.3)
   - nanopb (0.3.8):
@@ -65,20 +64,38 @@ PODS:
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
   - Protobuf (3.4.0)
+  - Purchases (2.1.0)
   - UXCam (2.5.13)
 
 DEPENDENCIES:
-  - Appsee
   - Firebase
   - Firebase/Auth
   - Firebase/Core
   - Firebase/Database
   - Firebase/Messaging
   - Firebase/Storage
+  - Purchases
   - UXCam
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Firebase
+    - FirebaseAnalytics
+    - FirebaseAuth
+    - FirebaseCore
+    - FirebaseDatabase
+    - FirebaseInstanceID
+    - FirebaseMessaging
+    - FirebaseStorage
+    - GoogleToolboxForMac
+    - GTMSessionFetcher
+    - leveldb-library
+    - nanopb
+    - Protobuf
+    - Purchases
+    - UXCam
+
 SPEC CHECKSUMS:
-  Appsee: be7e8199ddf914dc4e2adb4cb7ed7f162c74e7a9
   Firebase: 052c0de688fc87b414996eea13e223dd9fee3fa2
   FirebaseAnalytics: 76f754d37ca5b04f36856729b6af3ca0152d1069
   FirebaseAuth: f8b07aa83de60d606b4eadd81484b3ac2097ea3e
@@ -92,8 +109,9 @@ SPEC CHECKSUMS:
   leveldb-library: 10fb39c39e243db4af1828441162405bbcec1404
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Protobuf: 03eef2ee0b674770735cf79d9c4d3659cf6908e8
+  Purchases: 5872deac180c12fdf5e6578c9567bc0047f8a695
   UXCam: bd292e4ef7fc81e3367f3590079847beda7574b1
 
-PODFILE CHECKSUM: 18acb38ab5ca730a23aa6ed2d1589bfa8205862f
+PODFILE CHECKSUM: 66b3580d48e39345494d868d53f9e2fd1b8fca17
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.5.3

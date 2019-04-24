@@ -13,7 +13,7 @@ import FirebaseCore
 import FirebaseStorage
 import FirebaseDatabase
 import FirebaseAuth
-
+import Purchases
 
 var texts = [String:String]()
 var textimages = [UIImage]()
@@ -25,6 +25,14 @@ var feelingcolor = String()
 
 var searchedtext = String()
 var searchrelevantmessages = [String:String]()
+
+var colors = [UIColor]()
+
+var mypurple = UIColor(red:0.82, green:0.06, blue:0.59, alpha:1.0)
+var myblue = UIColor(red:0.11, green:0.64, blue:0.96, alpha:1.0)
+var mypink = UIColor(red:0.54, green:0.10, blue:0.80, alpha:1.0)
+var myred = UIColor(red:0.91, green:0.32, blue:0.33, alpha:1.0)
+
 
 class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
@@ -45,17 +53,14 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
     @IBOutlet weak var taphello: UIButton!
     @IBOutlet weak var tapno: UIButton!
     
+    @IBOutlet weak var backlabel: UIImageView!
     func startloading() {
         
-        loadingbackground.alpha = 1
-        activityIndicator.alpha = 1
-        activityIndicator.startAnimating()
+      
     }
     func hideloading() {
         
-        loadingbackground.alpha = 0
-        activityIndicator.alpha = 0
-        activityIndicator.stopAnimating()
+       
     }
     
     @IBAction func tapNo(_ sender: Any) {
@@ -125,7 +130,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
         
         for each in responseids {
             
-    ref?.child("Messages").child(each).observeSingleEvent(of: .value, with: { (snapshot) in
+    ref?.child("Messages").child(selectedobjective).child(each).observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 var value = snapshot.value as? NSDictionary
                 
@@ -203,7 +208,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
         
 //        ref?.child("Messages").child(feeling).observeSingleEvent(of: .value, with: { (snapshot) in
         
-        ref?.child("Messages").observeSingleEvent(of: .value, with: { (snapshot) in
+        ref?.child("Messages").child(selectedobjective).observeSingleEvent(of: .value, with: { (snapshot) in
 
             if let snapDict = snapshot.value as? [String:AnyObject] {
                 
@@ -351,63 +356,74 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
             return resizedimage ?? UIImage()
         }
 
-    
+    var gl:CAGradientLayer!
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
+        collectionView.layer.cornerRadius = 5.0
         objectives.removeAll()
-        objectives.append("Tinder Openers")
-        objectives.append("Breakups")
-        objectives.append("Apologies")
-        objectives.append("DMs")
-        objectives.append("Ghosts")
-        objectives.append("Compliments")
         
+        let colorTop = UIColor.clear.cgColor
+        let colorBottom = UIColor.white.cgColor
+//        try! Auth.auth().signOut()
+        
+        
+        self.gl = CAGradientLayer()
+        self.gl.colors = [colorTop, colorBottom]
+        self.gl.locations = [0.0, 1.0]
+        
+   
+//        objectives.append("Tinder Openers")
+//        objectives.append("Instagram DMs")
+//        objectives.append("Booty Calls")
+//        objectives.append("Snap Captions")
+//        objectives.append("Feels")
+//        objectives.append("Apologies")
+//        objectives.append("Breakups")
+//        objectives.append("Ghosts")
+        
+                objectives.append("Popular")
+                objectives.append("Openers")
+                objectives.append("Feels")
+                objectives.append("Yes")
+                objectives.append("No")
+                objectives.append("Celebrate")
+        
+        
+        colors.append(mypurple)
+        selectedobjective = "Popular"
         ref = Database.database().reference()
-        
-        let storagePath = UserDefaults.standard.object(forKey: "uid") as? String
         
 //        searchTextField.delegate = self
 //        searchTextField.returnKeyType = .done
         
         
         if Auth.auth().currentUser == nil {
-            // Do smth if user is not logged in
-            
-            
-            DispatchQueue.main.async {
-                
-                self.performSegue(withIdentifier: "HomeToAge", sender: self)
 
-            }
+            
+            queryforfeelings()
+            showpurchase()
             
         } else {
-            
-            startloading()
-            feeling = "Hello"
-            collectionView.alpha = 1
-//            tappedHello()
-            var defaults = UserDefaults(suiteName: "group.com.aatech.Slide")
-
-            defaults?.set(Auth.auth().currentUser!.uid, forKey: "uid")
-            
-            defaults?.synchronize()
 
             uid = Auth.auth().currentUser!.uid
             
             
             queryforfeelings()
-//            collectionView.collectionViewLayout = gridLayout
-            
-            
-            //        }
+            hidepurchase()
+
             
         }
 
-        addtextField.delegate = self as! UITextFieldDelegate
         
         // Do any additional setup after loading the view.
+        
+    }
+    
+    func newuser() {
+        
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -424,7 +440,8 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
     }
     
     
-    
+    var purchases = Purchases.configure(withAPIKey: "TwecCFVIQjxwkQTnJpsfLTgsAGyvVcKv", appUserID: nil)
+
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
         
@@ -447,7 +464,76 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
         //        return 5
         
     }
+    @IBOutlet weak var termslabel: UILabel!
     
+    @IBAction func tapPurchase(_ sender: Any) {
+        
+        
+        purchases.entitlements { (entitlements, error) in
+            guard let pro = entitlements?["premium"] else { return }
+            guard let monthly = pro.offerings["monthly"] else { return }
+            guard let product = monthly.activeProduct else { return }
+            
+            self.purchases.makePurchase(product, { (transaction, purchaserInfo, error, cancelled) in
+                if let purchaserInfo = purchaserInfo {
+                    
+                    print("x")
+
+                    
+                    if purchaserInfo.activeEntitlements.contains("my_entitlement_identifier") {
+                        // Unlock that great "pro" content
+                        
+                        self.performSegue(withIdentifier: "PayToCreate", sender: self)
+
+                        print("n")
+                    } else {
+                        
+                        self.performSegue(withIdentifier: "PayToCreate", sender: self)
+
+                        print("y")
+                    }
+                    
+                } else {
+                    
+                    self.performSegue(withIdentifier: "PayToCreate", sender: self)
+
+                    print("n")
+                }
+            })
+         
+        }
+    }
+    @IBAction func tapTerms(_ sender: Any) {
+    }
+    @IBOutlet weak var tapterms: UIButton!
+    @IBOutlet weak var popular: UIImageView!
+    @IBOutlet weak var pricelabel: UILabel!
+    @IBOutlet weak var tappurchase: UIButton!
+    
+    func hidepurchase() {
+        
+        tapterms.alpha = 0
+        pricelabel.alpha = 0
+        tappurchase.alpha = 0
+        backlabel.alpha = 0
+        popular.alpha = 0
+        termslabel.alpha = 0
+        
+        collectionView.isUserInteractionEnabled = true
+    }
+    
+    func showpurchase() {
+        tapterms.alpha = 1
+        pricelabel.alpha = 1
+        tappurchase.alpha = 1
+        backlabel.alpha = 1
+        popular.alpha = 1
+        termslabel.alpha = 1
+       tappurchase.layer.cornerRadius = 22.0
+        tappurchase.clipsToBounds = true
+        collectionView.isUserInteractionEnabled = false
+        
+    }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if collectionView.tag == 2 {
@@ -654,7 +740,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
         if let text2 = texts[responseids[indexPath.item]] {
             
             
-            height = text2.height(constraintedWidth: columnwidth-5, font: UIFont.systemFont(ofSize: 18)) + 25
+            height = text2.height(constraintedWidth: columnwidth-5, font: UIFont.systemFont(ofSize: 18)) + 45
             
             
             print(height)
@@ -674,8 +760,16 @@ class HomeViewController: UIViewController, UITextFieldDelegate, UICollectionVie
 
         }
         
-        
-        return CGSize(width: columnwidth, height: 74)
+            if height < 74 {
+                
+                height = 74
+                
+            } else {
+                
+                
+            }
+            
+        return CGSize(width: columnwidth, height: height)
             
         }
 

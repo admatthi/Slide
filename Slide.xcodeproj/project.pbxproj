@@ -17,6 +17,7 @@
 		9D1F64F92027B70300656F61 /* TextsFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1F64F82027B70300656F61 /* TextsFlowLayout.swift */; };
 		9D3DED1B202E856500CECD81 /* AgeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3DED1A202E856500CECD81 /* AgeViewController.swift */; };
 		9D3DED1D202E8C1900CECD81 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3DED1C202E8C1900CECD81 /* WelcomeViewController.swift */; };
+		9D5713B2227005FD00BE7756 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D5713B1227005FD00BE7756 /* StoreKit.framework */; };
 		9D600459201504E100A3105B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D600458201504E100A3105B /* Assets.xcassets */; };
 		9D600460201504E200A3105B /* Slide MessagesExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 9D60045F201504E200A3105B /* Slide MessagesExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		9D600465201504E200A3105B /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D600464201504E200A3105B /* Messages.framework */; };
@@ -88,6 +89,7 @@
 		9D29D9212024ABD000BD09F8 /* SlideApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SlideApp.entitlements; sourceTree = "<group>"; };
 		9D3DED1A202E856500CECD81 /* AgeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeViewController.swift; sourceTree = "<group>"; };
 		9D3DED1C202E8C1900CECD81 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
+		9D5713B1227005FD00BE7756 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		9D600455201504E100A3105B /* Slide.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Slide.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D600458201504E100A3105B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9D60045A201504E100A3105B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				410D03A28BB3C536875F1A2F /* Pods_SlideApp.framework in Frameworks */,
+				9D5713B2227005FD00BE7756 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -216,6 +219,7 @@
 		9D600463201504E200A3105B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9D5713B1227005FD00BE7756 /* StoreKit.framework */,
 				9D600464201504E200A3105B /* Messages.framework */,
 				C1E91ADC495F0AFA084F4573 /* Pods_Slide.framework */,
 				5CC16A733573D99C4BAF6AAC /* Pods_Slide_MessagesExtension.framework */,
@@ -291,7 +295,6 @@
 				9D600474201504E200A3105B /* Embed App Extensions */,
 				CB9C0A666FEE0F1A0D9A2A7E /* Frameworks */,
 				027F8456FC41E853A2D9CB8F /* [CP] Embed Pods Frameworks */,
-				4712D759072458DC8E3D796C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -311,7 +314,6 @@
 				9D60045B201504E200A3105B /* Sources */,
 				9D60045C201504E200A3105B /* Frameworks */,
 				9D60045D201504E200A3105B /* Resources */,
-				ADD650E6BDCA2D432120A95C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -331,7 +333,6 @@
 				9D9C3DDD2022C9C300DF5822 /* Frameworks */,
 				9D9C3DDE2022C9C300DF5822 /* Resources */,
 				8F8C9FC9ED6575582F103291 /* [CP] Embed Pods Frameworks */,
-				8C863C151D0FCA50966B69C5 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -406,6 +407,9 @@
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+							com.apple.InAppPurchase = {
 								enabled = 1;
 							};
 						};
@@ -535,21 +539,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4712D759072458DC8E3D796C /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Slide/Pods-Slide-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		48C3FE183C81D6DCAF207C48 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -568,21 +557,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		8C863C151D0FCA50966B69C5 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SlideApp/Pods-SlideApp-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		8F8C9FC9ED6575582F103291 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -593,6 +567,7 @@
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher-iOS11.2/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac-iOS11.2/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS11.2/Protobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/Purchases/Purchases.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library-iOS11.2/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb-iOS11.2/nanopb.framework",
 			);
@@ -601,27 +576,13 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Purchases.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SlideApp/Pods-SlideApp-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		ADD650E6BDCA2D432120A95C /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Slide MessagesExtension/Pods-Slide MessagesExtension-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FB497B1CB50590BCF1B628C4 /* [CP] Check Pods Manifest.lock */ = {

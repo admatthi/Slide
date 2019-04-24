@@ -11,7 +11,7 @@ pod ‘Firebase/Core’
 pod ‘Firebase/Storage’
 pod 'Firebase/Messaging'
 pod ‘Firebase/Database’
-pod ‘Appsee’
+pod 'Purchases'
 
   # Pods for Slide
 
